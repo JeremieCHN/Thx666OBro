@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var Film = mongoose.model('Film');
+//var Show = mongoose.model('Show');
+var Comment = mongoose.model('Comment');
 
 exports.addfilm = function(req, res) {
 	var type = "1";
@@ -37,7 +39,9 @@ exports.addfilm = function(req, res) {
 
 
 exports.getFilmList = function(req, res) {
-	var type = req.body.type;
+	var type = req.query.type;
+	//console.log(req);
+	//console.log(type);
 	Film.find({type: type})
 		.exec(function(err, films){
 			if(!films) {
@@ -54,7 +58,7 @@ exports.getFilmList = function(req, res) {
 					}
 					data.data.push(filmdata);
 				}
-				console.log(data);
+				//console.log(data);
 				//console.log(data[0]);
 				res.status(200).json(data);
 				res.end();
@@ -79,14 +83,73 @@ exports.getFilmLink = function(req, res) {
 
 
 exports.getFilmProfile = function(req, res) {
-	var film_name = req.body.film_name;
+	var film_name = req.query.film_name;
 	Film.findOne({film_name: film_name})
 		.exec(function(err, film) {
 			if(err) {
 				res.status(404);
 				res.end();
 			} else {
+				console.log(film);
+				console.log(film.type);
 				var data = {
+					//type: film.type,
+					film_name : film.film_name,
+					film_ename : film.film_ename,
+					film_classify : film.film_classify,
+					film_long : film.film_long,
+					film_detail : film.film_detail,
+					picture_url : film.picture_url,
+					video_link : film.video_link,
+					show_date : film.show_date,
+					score: film.score
+				}
+				console.log(data);
+				res.status(200).json(data);
+				res.end();
+			}
+		});
+}
+
+exports.getList = function(req, res) {
+	Film.find().exec(function(err, films) {
+		if(err) {
+			res.status(404);
+			res.end();
+		} else {
+			var filmlist = {filmlist: []};
+			for(film in films) {
+				var data = {
+					type: films[film].type,
+					film_name : films[film].film_name,
+					film_ename : films[film].film_ename,
+					film_classify : films[film].film_classify,
+					film_long : films[film].film_long,
+					film_detail : films[film].film_detail,
+					picture_url : films[film].picture_url,
+					video_link : films[film].video_link,
+					show_date : films[film].show_date,
+					score: films[film].score
+				}
+				filmlist.filmlist.push(data);
+			}
+			res.status(200).json(filmlist);
+			res.end();
+		}
+	});
+}
+
+
+exports.getFilmDetail = function(req, res) {
+	var film_name = req.query.film_name;
+	Film.findOne({film_name:film_name})
+		.exec(function(err, film) {
+			if(err) {
+				res.status(404);
+				res.end();
+			} else {
+				var data = {};
+				data.film_msg = {
 					type: film.type,
 					film_name : film.film_name,
 					film_ename : film.film_ename,
@@ -95,10 +158,39 @@ exports.getFilmProfile = function(req, res) {
 					film_detail : film.film_detail,
 					picture_url : film.picture_url,
 					video_link : film.video_link,
-					show_date : film.show_date
-				}
+					show_date : film.show_date,
+					score: film.score
+				};
+				//data.theaters = Show.get_theater(film.film_name);
+				data.comment = Comment.get_comment(film.film_name);
 				res.status(200).json(data);
 				res.end();
+			}
+		});
+}
+
+exports.changeFilmScore = function(req, res) {
+	var film_name = req.body.film_name;
+	Film.findOne({film_name: film_name})
+		.exec(function(err, film) {
+			if(err) {
+				console.log(err);
+				res.status(404);
+				res.end();
+			} else {
+				//console.log(req.body.score);
+				film.set('score', req.body.score);
+				film.save(function(err) {
+					if(err) {
+						console.log(err);
+						res.status(404);
+						res.end();
+					} else {
+						console.log("change success");
+						res.status(200);
+						res.end();
+					}
+				});
 			}
 		});
 }

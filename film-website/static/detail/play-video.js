@@ -1,6 +1,5 @@
-function play_video() {
+function play_video(video_url) {
     movie_name = $("#movie-name").html();
-    movie_src = "";
 
     $("#play").click(function(event) {
         $("#play-video").css('visibility', 'visible');
@@ -9,18 +8,7 @@ function play_video() {
             'overflow-y': 'hidden',
             'overflow-x': 'scroll'
         });
-
-        if (movie_src == "") {
-            // TODO: 视频功能，URL需补全
-            // $.get('?moviename=' + movie_name, function(data) {
-            //     if ($("#play-video").css('visibility') == 'visible')
-            //         $("#play-video p").after("<embed src='"+ data
-            //             +"' allowFullScreen='true' quality='high' align='middle' allowScriptAccess='always' type='application/x-shockwave-flash'></embed>");
-            // });
-        } else {
-            // $("#play-video p").after("<embed src='"+ movie_src
-            //     +"' allowFullScreen='true' quality='high' align='middle' allowScriptAccess='always' type='application/x-shockwave-flash'></embed>");
-        }
+        $("#play-video p").after("<embed src='"+ video_url +"' allowFullScreen='true' quality='high' align='middle' allowScriptAccess='always' type='application/x-shockwave-flash'></embed>");
     });
 
     $("#play-video > p").click(function(event) {

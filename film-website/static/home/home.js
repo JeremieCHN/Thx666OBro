@@ -6,7 +6,60 @@ window.onload = function () {
         return '<li><button class="buy-ticket">选座购票</button><div class="poster-message"><p>' + movieName + '</p></div><div class="shade"></div><img src="' + posterURL + '"></li>';
     }
 
+<<<<<<< HEAD
     $.get('/getFilmList?type="0"', function (data, textStatus) {
+=======
+    function li_shade(lis) { // 阴影事件
+        for (var i = lis.length - 1; i >= 0; i--) {
+            (function (li) {
+                li.mouseover(function () {
+                    var bros = li.siblings();
+                    for (var j = bros.length - 1; j >= 0; j--) {
+                        $(bros[j]).children(".shade").css("visibility", "visible");
+                    }
+                });
+                li.mouseleave(function () {
+                    var bros = li.siblings();
+                    for (var j = bros.length - 1; j >= 0; j--) {
+                        $(bros[j]).children(".shade").css("visibility", "hidden");
+                    }
+                });
+            })($(lis[i]));
+        }
+    }
+
+    function DirectionClick(num, direct) {
+        return function () {
+            var ul, liCount;
+            if (num === 0) {
+                var showing = $("#showing-list");
+                ul = showing.children("ul");
+                liCount = ul.children("li").length;
+            } else {
+                var coming = $("#show-soon-list");
+                ul = coming.children("ul");
+                liCount = ul.children("li").length;
+            }
+            // 页面容量和左边藏了几个
+            var maxCount = $(".list-part")[0].clientWidth / 210;
+            var hidCount = 0 - parseInt(ul.css("margin-left")) / 210;
+            if (liCount <= maxCount) // 页面上的就是全部
+                return;
+
+            if (direct === "left" && liCount - hidCount > maxCount) { // 左边还能藏
+                ul.css("margin-left", (0 - (hidCount + 1) * 210) + "px");
+            } else if (direct === "right" && hidCount > 0) {
+                ul.css("margin-left", (0 - (hidCount - 1) * 210) + "px");
+            }
+        };
+    }
+
+    var left_buttons = $(".left-button");
+    var right_buttons = $(".right-button");
+
+    // 网络请求
+    $.get('/getFilmList?type=0', function (data, textStatus) {
+>>>>>>> 609273acca7535140049ab4026f12c2753c4fe04
         if (textStatus === "success") {
             var movies = eval(data);
             var ul = $("#showing-list").children("ul.poster-part");

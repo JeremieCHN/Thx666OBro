@@ -3,7 +3,6 @@ var Schema = mongoose.Schema;
 
 var ReplySchema = new Schema({
 	username: String,
-	subject: String,
 	content: String,
 	timestamp: {type: Date, default: Date.now},
 	replies: [{type: Schema.ObjectId, ref:'Reply', default: null}]
@@ -12,8 +11,7 @@ var ReplySchema = new Schema({
 var CommentSchema = new Schema({
 	username: String,
 	film_name: String,
-	title: {type: String, required: true},
-	content: String,
+	content: {type: String, required: true},
 	timestamp: {type: Date, default: Date.now},
 	replies: [{type: Schema.ObjectId, ref:'Reply', default: null}]
 }, {collection:'Comment'});

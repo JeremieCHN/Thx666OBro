@@ -10,6 +10,7 @@ var FilmSchema = new Schema({
 	film_detail: String,
 	picture_url: String,
 	video_link: String,
+	score: String,
 	show_date: {type: Date},
 	user_favourite: [{type: Schema.ObjectId, ref:'User', default: null}]
 }, {collection:'Film'});

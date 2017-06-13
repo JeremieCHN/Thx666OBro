@@ -1,32 +1,33 @@
 window.onload = function () {
     login_register_part();
-    // 事件绑定
-    // var choices = $("#choices").children("p");
-    // $(choices[0]).click(function() {
-    //     if (!$(choices[0]).hasClass("cinema-comment-selected")) {
-    //         $(choices[0]).addClass("cinema-comment-selected");
-    //         $(choices[1]).removeClass("cinema-comment-selected");
-    //         $("#cinema-part").css("visibility", "visible");
-    //         $("#comment-part").css("visibility", "hidden");
-    //     }
-    // });
-    // $(choices[0]).click();
-    // $(choices[1]).click(function() {
-    //     if (!$(choices[1]).hasClass("cinema-comment-selected")) {
-    //         $(choices[1]).addClass("cinema-comment-selected");
-    //         $(choices[0]).removeClass("cinema-comment-selected");
-    //         $("#cinema-part").css("visibility", "hidden");
-    //         $("#comment-part").css("visibility", "visible");
-    //     }
-    // });
+    function play_video(video_url) {
+    movie_name = $("#movie-name").html();
+
+    $("#play").click(function(event) {
+        $("#play-video").css('visibility', 'visible');
+        $("body").css({
+            'height': '100vh',
+            'overflow-y': 'hidden',
+            'overflow-x': 'scroll'
+        });
+        $("#play-video p").after("<embed src='"+ video_url +"' allowFullScreen='true' quality='high' align='middle' allowScriptAccess='always' type='application/x-shockwave-flash'></embed>");
+    });
+
+    $("#play-video > p").click(function(event) {
+        $("#play-video").css('visibility', 'hidden');
+        $("#play-video embed").remove();
+        $("body").css("height", "auto");
+        $("body").css("overflow", "unset");
+    });
+}
 
     // TODO: 获取各种信息啊
-    var movie_name = window.location.href.split('?')[1];
-    $.get('/getFilmProFile?film_name=' + movie_name, function (data) {
+    var movie_name = window.location.href.split('=')[1];
+    $.get('/getFilmProfile?film_name=' + movie_name, function (data) {
         $("#video-poster img").attr("src", data.picture_url);
         $("#movie-name").html(data.film_name);
         $("#introduce span").html(data.film_detail);
-        $("#movie-language span").html(data.film_classify);
+        $("#movie-language span").html(data.film_ename);
         $("#directior span").html(data.show_date);
         $("#actors span").html(data.score);
         play_video(data.video_url);
@@ -38,8 +39,8 @@ window.onload = function () {
             comments.forEach(function (el) {
                 var date = new Date(el.timeStamp);
                 var dateStr = date.getYear() + date.getMonth() + date.getDay() + " " + date.getHours() + ":" + date.getMinutes();
-                $("#comment-part").append('<li>' +
-                    '<p><span class="comment-user">' + el.username + '</span><span class="comment-time">' + dateStr + '</span></p>' +
+                $("#comment-part ul").append('<li>' +
+                    '<p><span class="comment-user">' + el.username + '</span><span class="comment-time"></span></p>' +
                     '<p class="comment-detail">' + el.content + '</p>' +
                     '</li>');
             });
@@ -51,7 +52,7 @@ window.onload = function () {
         if (username !== "12345678900") {
             $.post("/add_comment", {
                 username: username,
-                file_name: movie_name,
+                film_name: decodeURI(movie_name),
                 content: $("textarea").val()
             }, function (data, textStatus) {
                 if (textStatus === "success")
