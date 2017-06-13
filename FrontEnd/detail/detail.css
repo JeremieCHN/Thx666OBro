@@ -11,6 +11,10 @@ body {
     user-select: none;
 }
 
+button:hover {
+    cursor: pointer;
+}
+
 *:focus {
     outline: none;
 }
@@ -26,15 +30,15 @@ a {
     text-decoration: none;
 }
 
-#background-poster {
+div#background-poster {
     position: absolute;
     z-index: 1;
     top: 70px;
     width: 100%;
     min-width: 800px;
     height: calc(100% - 70px);
+    background: url(res/bg.webp) no-repeat center;
     background-size: cover;
-    background: url(res/bg.webp) center;
 }
 
 #background-poster + img {

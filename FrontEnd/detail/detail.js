@@ -21,12 +21,11 @@ window.onload = function() {
     });
 
     // TODO: 获取各种信息啊
+    var movie_name = window.location.href.split('?')[1];
+    $.get('/get', function (data) {
+        play_video("http://player.youku.com/player.php/sid/XMjc5ODU5OTU3Ng==/v.swf");
+    });
 
-
-
-
-
-    play_video("http://player.youku.com/player.php/sid/XMjc5ODU5OTU3Ng==/v.swf");
     $("#star-bar").click(function() {
         var x = event.pageX - $("#star-bar").offset().left;
         $("#star-bar-bottom").width(x);
@@ -43,6 +42,4 @@ window.onload = function() {
         else
             $("#your-score").html(score.toFixed(1));
     });
-
-
 };

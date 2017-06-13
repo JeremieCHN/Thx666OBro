@@ -1,7 +1,7 @@
 var fs = require('fs');
 var crypto = require('crypto');
-var mongoose = require('mongoose');
-var User = mongoose.model('User');
+// var mongoose = require('mongoose');
+// var User = mongoose.model('User');
 var multiparty = require('multiparty');
 var formidable = require('formidable');
 var sms = require('./ihuyi.js');
@@ -26,27 +26,28 @@ exports.login = function(req, res){
 		username: username
 	};
 	data = JSON.stringify(data);
+	res.send(data);
 
-	User.findOne({username: username})
-		.exec(function(err, user) {
-			if(user) {
-				if(user.password_hash == password) {
-					req.session.user = user;
-					req.session.msg = 'success';
-					console.log(username + " login");
-					res.status(200).json(data);
-					res.end();
-				} else {
-					req.session.msg = 'password error';
-					res.status(404);
-					res.end();
-				}
-			} else {
-				req.session.msg = 'no user';
-				res.status(404);
-				res.end();
-			}
-	});
+	// User.findOne({username: username})
+	// 	.exec(function(err, user) {
+	// 		if(user) {
+	// 			if(user.password_hash == password) {
+	// 				req.session.user = user;
+	// 				req.session.msg = 'success';
+	// 				console.log(username + " login");
+	// 				res.status(200).json(data);
+	// 				res.end();
+	// 			} else {
+	// 				req.session.msg = 'password error';
+	// 				res.status(404);
+	// 				res.end();
+	// 			}
+	// 		} else {
+	// 			req.session.msg = 'no user';
+	// 			res.status(404);
+	// 			res.end();
+	// 		}
+	// });
 	}
 };
 
@@ -83,31 +84,31 @@ exports.register = function(req, res){
 	data = JSON.stringify(data);
 	//console.log(data);
 	//res.sendStatus(404);
-	//res.send(data);
+	res.send(data);
 
-	if(code == req.body.check_word && code != '') {
-		var user = new User({username: req.body.username});
-		user.set('password_hash', hashPW(req.body.password));
-		user.save(function(err) {
-			if(err) {
-				console.log(err);
-				//req.session.error = 'error';
-				res.status(404);
-				res.end();
-			} else {
-				//console.log("you");
-				req.session.user = user;
-				req.session.msg = 'success';
-				res.status(200).json(data);
-				res.end();
-			}
-		});
-		//res.status(200);
-	} else {
-		console.log('验证码错误');
-		res.status(404).json({msg: "验证码错误"});
-		res.end();
-	}
+	// if(code == req.body.check_word && code != '') {
+	// 	var user = new User({username: req.body.username});
+	// 	user.set('password_hash', hashPW(req.body.password));
+	// 	user.save(function(err) {
+	// 		if(err) {
+	// 			console.log(err);
+	// 			//req.session.error = 'error';
+	// 			res.status(404);
+	// 			res.end();
+	// 		} else {
+	// 			//console.log("you");
+	// 			req.session.user = user;
+	// 			req.session.msg = 'success';
+	// 			res.status(200).json(data);
+	// 			res.end();
+	// 		}
+	// 	});
+	// 	//res.status(200);
+	// } else {
+	// 	console.log('验证码错误');
+	// 	res.status(404).json({msg: "验证码错误"});
+	// 	res.end();
+	// }
 	}
 
 	/*if(req.body.username == '18819253726') {
@@ -120,35 +121,35 @@ exports.register = function(req, res){
 };
 
 exports.check_tel = function(req, res){
-	var code = Math.round(Math.random()*8999+1000);
-	var telnumber = req.body.username;
-	var txt = txt_front + code + txt_back;
-	console.log(telnumber + " " + code);
-	//console.log(txt);
-
-	User.findOne({username: telnumber})
-		.exec(function(err, user){
-			if(user) {
-				req.session.msg = 'telnumber is already exist';
-				res.status(404);
-				res.end();
-				//return;
-			} else {
-				//req.session.msg = 'the telnumber is free';
-				message.send(telnumber, txt, function(err, status){
-					if(err){
-						console.log(err);
-					} else {
-						console.log(status);
-					}
-				});
-				req.session.code = code.toString();
-				res.status(200);
-				res.end();
-				//return;
-			}			
-	});
-}
+    res.status(200);
+    res.end();
+	// var code = Math.round(Math.random()*8999+1000);
+	// var telnumber = req.body.username;
+	// var txt = txt_front + code + txt_back;
+	// console.log(telnumber + " " + code);
+	// //console.log(txt);
+    //
+	// User.findOne({username: telnumber})
+	// 	.exec(function(err, user){
+	// 		if(user) {
+	// 			req.session.msg = 'telnumber is already exist';
+	// 			res.status(404);
+	// 			res.end();
+	// 			//return;
+	// 		} else {
+	// 			//req.session.msg = 'the telnumber is free';
+	// 			message.send(telnumber, txt, function(err, status){
+	// 				if(err){
+	// 					console.log(err);
+	// 				} else {
+	// 					console.log(status);
+	// 				}
+	// 			});
+	// 			req.session.code = code.toString();
+	// 			//return;
+	// 		}
+	// });
+};
 
 exports.upload = function(req, res) { //请使用$.ajax 不要使用$.post, 需要用到contentType,processData字段
 	if(req.session.user) {
@@ -180,28 +181,28 @@ exports.upload = function(req, res) { //请使用$.ajax 不要使用$.post, 需�
 	    		});
 	    	}
 
-		    User.findOne({username: username})
-				.exec(function(err, user){
-					if(user) {
-						user.set('avatar_url', avatar_url);
-						user.save(function(err) {
-							if(err) {
-								res.status(404);
-								res.end();
-							} else {
-								req.session.user = user;
-								res.status(200).json({imgSrc:avatar_url});
-								res.end();
-							}
-						});
-						//return;
-					} else {
-						console.log(err);
-						res.status(404);
-						res.end();
-						//return;
-					}			
-			});
+            // User.findOne({username: username})
+			// 	.exec(function(err, user){
+			// 		if(user) {
+			// 			user.set('avatar_url', avatar_url);
+			// 			user.save(function(err) {
+			// 				if(err) {
+			// 					res.status(404);
+			// 					res.end();
+			// 				} else {
+			// 					req.session.user = user;
+			// 					res.status(200).json({imgSrc:avatar_url});
+			// 					res.end();
+			// 				}
+			// 			});
+			// 			//return;
+			// 		} else {
+			// 			console.log(err);
+			// 			res.status(404);
+			// 			res.end();
+			// 			//return;
+			// 		}
+			// });
 	    }
 	});
 	} else {

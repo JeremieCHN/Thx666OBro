@@ -7,12 +7,17 @@ module.exports = function(app) {
 	var send_message = new sms();
 
 	app.use('/static', express.static('./static'));
-	
-	app.get('/', function(req, res) {
-		console.log('request to route /');
-		res.render('home/home');
-		//res.send('Hello World');
-	});
+
+    app.get('/', function(req, res) {
+        console.log('request to route /');
+        res.render('home/home');
+        //res.send('Hello World');
+    });
+    app.get('/movielist', function(req, res) {
+        console.log('request to route /');
+        res.render('movielist/movielist');
+        //res.send('Hello World');
+    });
 
 	app.post('/', function(req,res) {
 		console.log('post to /');

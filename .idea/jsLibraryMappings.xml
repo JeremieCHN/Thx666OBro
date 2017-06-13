@@ -2,5 +2,6 @@
 <project version="4">
   <component name="JavaScriptLibraryMappings">
     <file url="PROJECT" libraries="{jquery-latest}" />
+    <excludedPredefinedLibrary name="Thx666OBro/Thx666OBro/film-website/node_modules" />
   </component>
 </project>
